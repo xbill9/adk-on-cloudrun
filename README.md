@@ -1,6 +1,8 @@
 # adk-on-cloudrun
 
-This project implements a "Zoo Guide Agent" using the Google Agent Development Kit (ADK). The agent can answer questions about animals, combining information from a local zoo database (via an MCP server) and Wikipedia. It's designed to be deployed on Google Cloud Run.
+This project provides a comprehensive example of a "Zoo Guide Agent" built using the Google Agent Development Kit (ADK). The agent is designed to be deployed on Google Cloud Run and serves as an interactive guide that can answer questions about animals. It demonstrates a powerful pattern of combining information from a private, internal data source (a simulated zoo database accessed via an MCP server) with a vast public knowledge base (Wikipedia).
+
+The core functionality involves a sophisticated multi-agent workflow. When a user asks a question, the system first gathers internal data, such as the animal's name, age, and location within the zoo. Simultaneously, it queries Wikipedia for general information like diet, habitat, and lifespan. Both sets of data are then processed and synthesized by a dedicated "formatter" agent, which crafts a friendly, engaging, and conversational response in the persona of a zoo tour guide. This showcases how the ADK can be used to build agents that integrate multiple tools and data sources to provide rich, context-aware answers.
 
 ## Project Details
 
@@ -85,16 +87,6 @@ This script deploys the application to Google Cloud Run. The service will be nam
 ./cloudrun.sh
 ```
 
-### `cloudrun-secure.sh`
-
-This script deploys the application to Google Cloud Run with a secure configuration. The service will be named `zoo-guide-agent`, will not be publicly accessible, and requests will need to be authenticated with an identity token.
-
-**Usage:**
-
-```bash
-./cloudrun-secure.sh
-```
-
 ## Deployment
 
 To deploy the application to Google Cloud Run, follow these steps:
@@ -119,8 +111,3 @@ To deploy the application to Google Cloud Run, follow these steps:
         ./cloudrun.sh
         ```
 
-    *   For a secure deployment:
-
-        ```bash
-        ./cloudrun-secure.sh
-        ```
