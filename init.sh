@@ -9,7 +9,7 @@ handle_error() {
 }
 
 # --- Part 1: Set Google Cloud Project ID ---
-cd ~/mcp-on-cloudrun
+
 
 
 PROJECT_FILE="$HOME/project_id.txt"
@@ -35,27 +35,31 @@ echo "Successfully saved project ID."
 
 echo "Enabling Services"
 gcloud services enable \
-  run.googleapis.com \
-  artifactregistry.googleapis.com \
-  cloudbuild.googleapis.com
+    run.googleapis.com \
+    artifactregistry.googleapis.com \
+    cloudbuild.googleapis.com \
+    aiplatform.googleapis.com \
+    compute.googleapis.com 
+
+echo "Hardcoding Region to europe-west1" 
+
+gcloud config set compute/region europe-west1
 
 
 echo "Adding IAM Roles"
 
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+  --member="serviceAccount:$SERVICE_ACCOUNT" \
+  --role="roles/run.invoker" \
+    --quiet \
+    --condition=None
+    
 
 export GOOGLE_CLOUD_PROJECT=$(gcloud config get project)
 
   if  [[ -z "$CLOUD_SHELL" ]] && curl -s -i metadata.google.internal | grep -q "Metadata-Flavor: Google"; then
      echo "This VM is running on GCP Defaults to Service Account."
-  else
-
-gcloud projects add-iam-policy-binding $GOOGLE_CLOUD_PROJECT \
-    --member=user:$(gcloud config get-value account) \
-    --role='roles/run.invoker' \
-    --quiet \
-    --condition=None
-    
-    fi
+  fi 
 
 if [ "$CLOUD_SHELL" = "true" ]; then
   echo "Running in Google Cloud Shell."
@@ -82,6 +86,18 @@ else
 fi
 
 export ID_TOKEN=$(gcloud auth print-identity-token)
+
+export MCP_SERVER_URL=https://zoo-mcp-server-${PROJECT_NUMBER}.europe-west1.run.app/mcp/
+echo -e "\nMCP_SERVER_URL=https://zoo-mcp-server-${PROJECT_NUMBER}.europe-west1.run.app/mcp/" > ./zoo_guide_agent/.env
+echo -e "\nMODEL=gemini-2.5-flash" >> ./zoo_guide_agent/.env
+echo -e "\nSERVICE_ACCOUNT=${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" >> ./zoo_guide_agent/.env
+echo "Setting MCP SERVER URL $MCP_SERVER_URL"
+
+MODEL="gemini-2.5-flash"
+SERVICE_ACCOUNT="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
+
+export MODEL="gemini-2.5-flash"
+echo "Setting MODEL $MODEL"
 
 echo "--- Initial Setup complete ---"
 

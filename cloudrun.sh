@@ -1,8 +1,13 @@
-echo "Deploying Cloud Run Endpoint in Unauthenticated Mode"
+echo "Deploying ADK code to Cloud Run "
 
-gcloud run deploy zoo-mcp-server \
-    --allow-unauthenticated \
+
+adk deploy cloud_run \
+    --project=$PROJECT_ID \
     --region=europe-west1 \
-    --source=. \
-    --labels=dev-tutorial=codelab-gde-medium-open
+  --service_name=zoo-tour-guide \
+  --with_ui \
+ zoo_guide_agent 
 
+gcloud run services update zoo-tour-guide \
+  --region=europe-west1 \
+  --update-labels=dev-tutorial=codelab-gde-medium-adk

@@ -63,6 +63,5 @@ export ID_TOKEN=$(gcloud auth print-identity-token)
 export GOOGLE_GENAI_USE_VERTEXAI="TRUE"
 echo "Exported GOOGLE_GENAI_USE_VERTEXAI=$GOOGLE_GENAI_USE_VERTEXAI"
 
-
 echo ""
 echo "--- Environment setup complete ---"
